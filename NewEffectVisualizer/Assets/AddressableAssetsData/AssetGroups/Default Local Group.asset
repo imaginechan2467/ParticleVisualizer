@@ -16,11 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: efbca8f73e8bb1344bc6c59348fc5be9
-  m_SerializeEntries:
-  - m_GUID: f0342a92c81bf174eb110f192c2ab924
-    m_Address: Assets/Plugins/Polygon Arsenal/Prefabs/Combat/Beams
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3f75cf697dae5864f89b3bbca98b2518, type: 2}
   m_SchemaSet:
