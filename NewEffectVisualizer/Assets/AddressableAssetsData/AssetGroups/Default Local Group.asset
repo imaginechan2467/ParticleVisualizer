@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: efbca8f73e8bb1344bc6c59348fc5be9
+  m_SerializeEntries:
+  - m_GUID: f0342a92c81bf174eb110f192c2ab924
+    m_Address: Assets/Plugins/Polygon Arsenal/Prefabs/Combat/Beams
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3f75cf697dae5864f89b3bbca98b2518, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7167e5f42d1ecfe429b2348fb296fa14, type: 2}
+    - {fileID: 11400000, guid: 6e01c85ead4893a429a0d10259f21430, type: 2}

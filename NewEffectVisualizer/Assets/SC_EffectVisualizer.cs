@@ -13,7 +13,9 @@ public class SC_EffectVisualizer : MonoBehaviour
 {
     [SerializeField] private string assetPath = "";
     [SerializeField] private TextMeshProUGUI text = null;
+    [SerializeField] private TextMeshProUGUI stateText = null;
     [SerializeField,Min(0.00001f)] private float cameraMoveSpeed = 0.1f;
+    [SerializeField,Min(0.00001f)] private float objectMoveSpeed = 1.0f;
     [SerializeField] private string videoFileName = "effectVideo";
     
     private List<GameObject> effectList = new List<GameObject>();
@@ -34,20 +36,28 @@ public class SC_EffectVisualizer : MonoBehaviour
         mainCamera = Camera.main.gameObject;
 
         text.text = "now loading...";
+
+        stateText.text = "";
     }
 
     private async void Start()
     {
         Debug.Log("ロード開始1 = " + assetPath);
-    
-    
+
+        if (assetPath.ToCharArray()[assetPath.Length - 1].CompareTo('/') != 0)
+        {
+            Debug.Log("パス = " + assetPath);
+            assetPath += "/";
+            Debug.Log("足したよ = " + assetPath);
+        }
+        
         string[] fs = System.IO.Directory.GetFiles(assetPath, "*.prefab", System.IO.SearchOption.AllDirectories);
         int i = 0;
         foreach (string _name in fs)
         {
-            Debug.Log("Load File 1 = " + _name);
+            // Debug.Log("Load File 1 = " + _name);
             string _newName = _name.Replace("\\", "/");
-            Debug.Log("Load File 2 = " + _newName);
+            // Debug.Log("Load File 2 = " + _newName);
             try
             {
                 GameObject temp = await Addressables.InstantiateAsync(_newName).Task;
@@ -76,7 +86,8 @@ public class SC_EffectVisualizer : MonoBehaviour
         }
         else if (type == RecordType.movie)
         {
-            await Recorder();
+            // await Recorder();
+            Debug.Log("<color=orange>動画は未実装です</color>");
         }
         else if (type == RecordType.picture)
         {
@@ -108,29 +119,61 @@ public class SC_EffectVisualizer : MonoBehaviour
                 return false;
             }
 
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.LeftShift))//エフェクト移動
             {
-                mainCamera.transform.position += Vector3.left.normalized * (cameraMoveSpeed * Time.deltaTime);
+                stateText.text = "OBJ MOVE";
+                if (Input.GetKey(KeyCode.A))
+                {
+                    currentObject.transform.position += Vector3.left.normalized * (objectMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    currentObject.transform.position += Vector3.right.normalized * (objectMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.W))
+                {
+                    currentObject.transform.position += Vector3.forward.normalized * (objectMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    currentObject.transform.position += Vector3.back.normalized * (objectMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.E))
+                {
+                    currentObject.transform.position += Vector3.up.normalized * (objectMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.Q))
+                {
+                    currentObject.transform.position += Vector3.down.normalized * (objectMoveSpeed * Time.deltaTime);
+                }
             }
-            if (Input.GetKey(KeyCode.D))
+            else//カメラ操作
             {
-                mainCamera.transform.position += Vector3.right.normalized * (cameraMoveSpeed * Time.deltaTime);
-            }
-            if (Input.GetKey(KeyCode.W))
-            {
-                mainCamera.transform.position += Vector3.forward.normalized * (cameraMoveSpeed * Time.deltaTime);
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                mainCamera.transform.position += Vector3.back.normalized * (cameraMoveSpeed * Time.deltaTime);
-            }
-            if (Input.GetKey(KeyCode.E))
-            {
-                mainCamera.transform.position += Vector3.up.normalized * (cameraMoveSpeed * Time.deltaTime);
-            }
-            if (Input.GetKey(KeyCode.Q))
-            {
-                mainCamera.transform.position += Vector3.down.normalized * (cameraMoveSpeed * Time.deltaTime);
+                stateText.text = "CAM MOVE";
+                if (Input.GetKey(KeyCode.A))
+                {
+                    mainCamera.transform.position += Vector3.left.normalized * (cameraMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    mainCamera.transform.position += Vector3.right.normalized * (cameraMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.W))
+                {
+                    mainCamera.transform.position += Vector3.forward.normalized * (cameraMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    mainCamera.transform.position += Vector3.back.normalized * (cameraMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.E))
+                {
+                    mainCamera.transform.position += Vector3.up.normalized * (cameraMoveSpeed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.Q))
+                {
+                    mainCamera.transform.position += Vector3.down.normalized * (cameraMoveSpeed * Time.deltaTime);
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -160,6 +203,19 @@ public class SC_EffectVisualizer : MonoBehaviour
                 currentObject.SetActive(true);
                 currentObject.transform.position = Vector3.zero;
                 text.text = currentObject.name;
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (currentObject.TryGetComponent<ParticleSystem>(out var _eff))
+                {
+                    if (_eff.isPlaying)
+                    {
+                        _eff.Stop();
+
+                    }
+                    Debug.Log("エフェクト再生");
+                    _eff.Play();
+                }
             }
             
             return true;
@@ -240,17 +296,16 @@ public class SC_EffectVisualizer : MonoBehaviour
         movieRecorderSettings.OutputFormat = MovieRecorderSettings.VideoRecorderOutputFormat.MP4;
         movieRecorderSettings.Enabled = true;
         setting.AddRecorderSettings(movieRecorderSettings);
-        //
-        // var recorderController = new RecorderController(setting);
-        // Debug.Log("録画開始");
-        // recorderController.StartRecording();
+        
+        var recorderController = new RecorderController(setting);
+        recorderController.StartRecording();
+        
+        Debug.Log("録画開始 = "  + recorderController.IsRecording());
 
         foreach (GameObject _obj in effectList)
         {
             if (_obj.TryGetComponent<ParticleSystem>(out var _eff))
             {
-                float currentTime = 0.0f;
-
                 //有効化
                 _obj.SetActive(true);
                 _obj.transform.position = Vector3.zero;
@@ -258,17 +313,17 @@ public class SC_EffectVisualizer : MonoBehaviour
                 // UniTask.Delay((int)(1000 * _eff.main.duration));
 
                 //撮影
-                Debug.Log("録画待機");
+                // Debug.Log("録画待機");
                 await UniTask.Delay((int)(1000 * _eff.main.duration));
-                setting.SetRecordModeToTimeInterval(0.0f, _eff.main.duration);
-                Debug.Log("録画一個終了");
+                // setting.SetRecordModeToTimeInterval(0.0f, _eff.main.duration);
+                // Debug.Log("録画一個終了");
                 
                 //無効化
                 _obj.SetActive(false);
             }
         }
         
-        // recorderController.StopRecording();
+        recorderController.StopRecording();
 
         Debug.Log("録画終了");
     }
