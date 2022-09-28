@@ -798,11 +798,11 @@ PrefabInstance:
       objectReference: {fileID: 291521320}
     - target: {fileID: 7654697654506408695, guid: b49f2154f21d648498cd1877c5a7e3e8, type: 3}
       propertyPath: type
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7654697654506408695, guid: b49f2154f21d648498cd1877c5a7e3e8, type: 3}
       propertyPath: assetPath
-      value: 
+      value: Assets/Plugins/Polygon Arsenal/Prefabs/Interactive/Healing
       objectReference: {fileID: 0}
     - target: {fileID: 7654697654506408695, guid: b49f2154f21d648498cd1877c5a7e3e8, type: 3}
       propertyPath: stateText

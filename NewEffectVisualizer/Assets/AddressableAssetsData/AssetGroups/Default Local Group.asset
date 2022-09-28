@@ -16,7 +16,11 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: efbca8f73e8bb1344bc6c59348fc5be9
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: ade79658af00ac74aa8ada00009a8ce9
+    m_Address: Assets/Plugins/Polygon Arsenal/Prefabs/Interactive/Healing
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3f75cf697dae5864f89b3bbca98b2518, type: 2}
   m_SchemaSet:

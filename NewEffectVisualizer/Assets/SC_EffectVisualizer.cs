@@ -17,7 +17,7 @@ public class SC_EffectVisualizer : MonoBehaviour
     [SerializeField,Min(0.00001f)] private float cameraMoveSpeed = 0.1f;
     [SerializeField,Min(0.00001f)] private float objectMoveSpeed = 1.0f;
     [SerializeField] private string videoFileName = "effectVideo";
-    
+
     private List<GameObject> effectList = new List<GameObject>();
     private GameObject mainCamera = null;
     
@@ -86,8 +86,9 @@ public class SC_EffectVisualizer : MonoBehaviour
         }
         else if (type == RecordType.movie)
         {
+            await VideoShooting();
             // await Recorder();
-            Debug.Log("<color=orange>動画は未実装です</color>");
+            // Debug.Log("<color=orange>動画は未実装です</color>");
         }
         else if (type == RecordType.picture)
         {
@@ -274,6 +275,36 @@ public class SC_EffectVisualizer : MonoBehaviour
     async UniTask WaitGetTextutre(string _name)
     {
         await UniTask.WaitUntil(() => File.Exists(_name));
+    }
+
+    async UniTask VideoShooting()
+    {
+        foreach (GameObject _obj in effectList)
+        {
+            if (_obj.TryGetComponent<ParticleSystem>(out var _eff))
+            {
+                float currentTime = 0.0f;
+
+                //有効化
+                _obj.SetActive(true);
+                _obj.transform.position = new Vector3(-3.0f, 0, 0);
+                float moveDef = (6.0f / _eff.main.duration);
+                
+                await UniTask.WaitWhile(() =>
+                {
+                    currentTime += Time.deltaTime;
+                    if (currentTime >= _eff.main.duration)
+                    {
+                        return false;
+                    }
+
+                    _obj.transform.position += Vector3.right.normalized * moveDef * Time.deltaTime;
+                    return true;
+                });
+                
+                _obj.SetActive(false);
+            }
+        }
     }
 
     
